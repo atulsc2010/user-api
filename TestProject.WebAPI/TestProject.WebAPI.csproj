@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.0</TargetFramework>
+    <StartupObject></StartupObject>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,6 +47,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Commands\Accounts\" />
+    <Folder Include="Queries\Accounts\" />
     <Folder Include="Services\" />
   </ItemGroup>
 

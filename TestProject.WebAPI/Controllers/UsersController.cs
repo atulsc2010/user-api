@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using TestProject.WebAPI.Commands.Users;
 using TestProject.WebAPI.Domain;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using TestProject.WebAPI.Queries.Users;
 
 namespace TestProject.WebAPI.Controllers
 {
@@ -13,24 +13,40 @@ namespace TestProject.WebAPI.Controllers
     [ApiController]
     public class UsersController : BaseController
     {
-        // GET: api/<UsersController>
-        [HttpGet("/list")]
+
+        [HttpGet]
+        public ActionResult<string> Get()
+        {
+            return Ok("Api is running.");
+        }
+
+        [HttpGet("list")]
         public async Task<IActionResult> List()
         {
-            return new User[] { "value1", "value2" };
+            var query = new ListUsersQuery();
+            var response = await Mediator.Send(query);
+
+            return Ok(response);
         }
         
         // GET api/<UsersController>/5
         [HttpGet("{id}")]
-        public ActionResult<User> Get([FromRoute] Guid id)
+        public ActionResult<User> GetUser([FromRoute] Guid id)
         {
-            return new User { Id = Guid.NewGuid() };
+            var query = new GetUserQuery();
+            var response = await Mediator.Send(query);
+
+            return Ok(response);
         }
 
         // POST api/<UsersController>/create
         [HttpPost("/create")]
-        public void Create([FromBody] string value)
+        public async Task<IActionResult> Create([FromBody] string value)
         {
+            var command = new CreateUserCommand();
+            var response = await Mediator.Send(command);
+
+            return Ok(response);
         }
     }
 }
