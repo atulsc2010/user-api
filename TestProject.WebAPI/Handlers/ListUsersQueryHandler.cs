@@ -8,7 +8,7 @@ using TestProject.WebAPI.Queries.Users;
 
 namespace TestProject.WebAPI.Handlers
 {
-    public class ListUserQueryHandler : IRequestHandler<ListUsersQuery, IEnumerable<ListUsersResponse>>
+    public class ListUsersQueryHandler : IRequestHandler<ListUsersQuery, IEnumerable<ListUsersResponse>>
     {
         public async Task<IEnumerable<ListUsersResponse>> Handle(ListUsersQuery request, CancellationToken cancellationToken)
         {
