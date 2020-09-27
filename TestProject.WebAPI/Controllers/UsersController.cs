@@ -31,9 +31,9 @@ namespace TestProject.WebAPI.Controllers
         
         // GET api/<UsersController>/5
         [HttpGet("{id}")]
-        public ActionResult<User> GetUser([FromRoute] Guid id)
+        public async Task<IActionResult> GetUser([FromRoute] Guid id)
         {
-            var query = new GetUserQuery();
+            var query = new GetUserQuery(id);
             var response = await Mediator.Send(query);
 
             return Ok(response);
