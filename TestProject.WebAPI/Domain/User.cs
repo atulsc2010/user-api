@@ -12,6 +12,6 @@ namespace TestProject.WebAPI.Domain
         public string Email { get; set; }
         public decimal Salary { get; set; }
         public decimal Expenses { get; set; }
-        public IEnumerable<Account> Accounts { get;}
+        public IEnumerable<Account> Accounts { get; set; }
     }
 }

@@ -1,26 +1,48 @@
 ﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using TestProject.WebAPI.Models;
 using TestProject.WebAPI.Queries.Users;
 
 namespace TestProject.WebAPI.Handlers
 {
     public class ListUsersQueryHandler : IRequestHandler<ListUsersQuery, IEnumerable<ListUsersResponse>>
     {
+        private readonly ApiDbContext _db;
+
+        public ListUsersQueryHandler(ApiDbContext db)
+        {
+            _db = db;
+        }
+
         public async Task<IEnumerable<ListUsersResponse>> Handle(ListUsersQuery request, CancellationToken cancellationToken)
         {
-            return await Task.FromResult(new List<ListUsersResponse>()
+            var users = await _db.Users
+                                 .Select(u => new ListUsersResponse { Id = u.Id, Name = u.Name, Email = u.Email })
+                                 .ToListAsync() ;
+
+            if (users.Any())
             {
-                new ListUsersResponse
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Tester",
-                    Email = "email@email.com"
-                }
-            });
+                return users;
+            }
+            else
+            {
+                return new List<ListUsersResponse>();
+            }
+
+            //return await Task.FromResult(new List<ListUsersResponse>()
+            //{
+            //    new ListUsersResponse
+            //    {
+            //        Id = Guid.NewGuid(),
+            //        Name = "Tester",
+            //        Email = "email@email.com"
+            //    }
+            //});
         }
     }
 }

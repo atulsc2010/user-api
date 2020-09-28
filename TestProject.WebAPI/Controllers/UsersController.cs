@@ -36,7 +36,14 @@ namespace TestProject.WebAPI.Controllers
             var query = new GetUserQuery(id);
             var response = await Mediator.Send(query);
 
-            return Ok(response);
+            if (response != null)
+            {
+                return Ok(response);
+            }
+            else 
+            {
+                return NotFound($"{{error : User {id} Not found }}");          
+            }
         }
 
         // POST api/<UsersController>/create
