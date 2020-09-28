@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Reflection;
+using TestProject.WebAPI.Models;
 
 namespace TestProject.WebAPI
 {
@@ -30,7 +31,7 @@ namespace TestProject.WebAPI
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
             services.AddControllers();
             
-            var connectionString = Environment.GetEnvironmentVariable("DB_CONNECTION_STRING");
+            var connectionString = Configuration["DbContextSettings:ConnectionString"];
             services.AddDbContext<ApiDbContext>(options => options.UseNpgsql(connectionString));
         }
 
