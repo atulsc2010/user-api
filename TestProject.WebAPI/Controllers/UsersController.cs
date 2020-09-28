@@ -47,10 +47,10 @@ namespace TestProject.WebAPI.Controllers
         }
 
         // POST api/<UsersController>/create
-        [HttpPost("/create")]
-        public async Task<IActionResult> Create([FromBody] string value)
+        [HttpPost("create")]
+        public async Task<IActionResult> Create([FromBody] CreateUserRequest userRequest)
         {
-            var command = new CreateUserCommand();
+            var command = new CreateUserCommand(userRequest);
             var response = await Mediator.Send(command);
 
             return Ok(response);

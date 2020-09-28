@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace TestProject.WebAPI.Commands.Users
 {
-    public class CreateUserDto
+    public class CreateUserResponse
     {
-        public Guid Id { get; set; }
-        public string Email { get; set; }
+        public Guid Id { get; set; }        
     }
 }
