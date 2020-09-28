@@ -1,10 +1,10 @@
-FROM mcr.microsoft.com/dotnet/core/aspnet:3.0-buster-slim AS base
+FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 ENV ASPNETCORE_URLS=http://*:80
 
-FROM mcr.microsoft.com/dotnet/core/sdk:3.0-buster AS build
+FROM mcr.microsoft.com/dotnet/core/sdk:3.1 AS build
 WORKDIR /src
 COPY ["TestProject.WebAPI/TestProject.WebAPI.csproj", "TestProject.WebAPI/"]
 RUN dotnet restore "TestProject.WebAPI/TestProject.WebAPI.csproj"

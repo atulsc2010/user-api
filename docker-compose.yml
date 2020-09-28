@@ -1,11 +1,22 @@
 version: "3.8"
 services:
+  userapi:
+    image: userapi:latest
+    depends_on: 
+      - "postgres"
+    build:
+      context: .
+      dockerfile: Dockerfile
+      ports: 
+        - 8000:80
+      environment:
+        DB_CONNECTION_STRING:"host=postgres;port:5432;database=postgres;username=postgresuser;password=Passw0rd"
   postgres:
     image: postgres:12
     ports:
       - 5432:5432
     volumes:
-      - db_volume:/var/lib/
+      - db_volume:/var/lib/posgresql/data
     environment:
       POSTGRES_USER: "postgresuser"
       POSTGRES_PASSWORD: "Passw0rd"
