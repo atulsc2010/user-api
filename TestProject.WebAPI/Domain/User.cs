@@ -13,5 +13,11 @@ namespace TestProject.WebAPI.Domain
         public decimal Salary { get; set; }
         public decimal Expenses { get; set; }
         public IEnumerable<Account> Accounts { get; set; }
+
+        public bool IsIncomeThresholdMet()
+        {
+            return Salary - Expenses >= 1000;
+        }
+
     }
 }

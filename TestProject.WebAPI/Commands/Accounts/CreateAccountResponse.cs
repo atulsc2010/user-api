@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace TestProject.WebAPI.Commands.Users
+namespace TestProject.WebAPI.Commands.Accounts
 {
-    public class CreateUserResponse
+    public class CreateAccountResponse
     {
         public string Type => GetType().Name;
         public Guid Id { get; set; }

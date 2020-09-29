@@ -46,7 +46,6 @@ namespace TestProject.WebAPI.Controllers
             }
         }
 
-        // POST api/<UsersController>/create
         [HttpPost("create")]
         public async Task<IActionResult> Create([FromBody] CreateUserRequest userRequest)
         {
@@ -55,7 +54,7 @@ namespace TestProject.WebAPI.Controllers
 
             if (response.Status == "Success")
             {
-                return Created("/create", response);
+                return Created("/users/create", response);
             }
             else
             {

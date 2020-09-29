@@ -22,6 +22,7 @@ namespace TestProject.WebAPI.Handlers
         public async Task<GetUserResponse> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {            
             var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == request.Id);
+            //var accounts = await _db.Accounts.Where(a => a.UserId == user.Id).AsEnumerable();
 
             if (user != null)
             {
