@@ -1,6 +1,6 @@
 version: "3.8"
-services:
-  postgresdb:
+services: 
+  db:
     image: postgres:12
     restart: always
     ports:
@@ -16,12 +16,16 @@ services:
     image: userapi:latest
     restart: always
     depends_on: 
-      - "postgresdb"
+      - "db"
     build:
       context: .
       dockerfile: Dockerfile
+    links:
+      - "db:database"
     ports: 
       - 8000:80
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Development"
 
 volumes:
   db-volume:

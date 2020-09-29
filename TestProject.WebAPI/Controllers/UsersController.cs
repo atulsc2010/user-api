@@ -53,7 +53,14 @@ namespace TestProject.WebAPI.Controllers
             var command = new CreateUserCommand(userRequest);
             var response = await Mediator.Send(command);
 
-            return Ok(response);
+            if (response.Status == "Success")
+            {
+                return Created("/create", response);
+            }
+            else
+            {
+                return BadRequest(response);
+            }
         }
     }
 }

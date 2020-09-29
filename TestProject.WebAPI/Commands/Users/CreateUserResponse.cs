@@ -7,6 +7,8 @@ namespace TestProject.WebAPI.Commands.Users
 {
     public class CreateUserResponse
     {
-        public Guid Id { get; set; }        
+        public Guid Id { get; set; }
+
+        public string Status { get; set; }
     }
 }
