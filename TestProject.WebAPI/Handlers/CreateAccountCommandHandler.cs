@@ -1,7 +1,5 @@
 ﻿using MediatR;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TestProject.WebAPI.Commands.Accounts;
@@ -30,14 +28,19 @@ namespace TestProject.WebAPI.Handlers
                 {
                     var user = await _db.Users.FindAsync(userId);
 
+                    if (user == null)
+                    {
+                        return new CreateAccountResponse { Id = Guid.Empty, Status = "User not found, Account could not be created" };
+                    }
+
                     if (user.IsIncomeThresholdMet())
                     {
-                       account = new Account
+                        account = new Account
                         {
                             Id = Guid.NewGuid(),
                             UserId = user.Id,
                             Balance = 0,
-                            Name = $"Zip {DateTime.Now:dd MMM YY}",
+                            Name = $"Wallet {DateTime.Now:fffffff}",
                             Status = AccountStatus.Active
                         };
                     }

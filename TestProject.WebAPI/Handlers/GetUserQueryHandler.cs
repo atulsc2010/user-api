@@ -21,8 +21,7 @@ namespace TestProject.WebAPI.Handlers
 
         public async Task<GetUserResponse> Handle(GetUserQuery request, CancellationToken cancellationToken)
         {            
-            var user = await _db.Users.FirstOrDefaultAsync(u => u.Id == request.Id);
-            //var accounts = await _db.Accounts.Where(a => a.UserId == user.Id).AsEnumerable();
+            var user = await _db.Users.Include(u => u.Accounts).FirstOrDefaultAsync(u => u.Id == request.Id);
 
             if (user != null)
             {
@@ -41,14 +40,6 @@ namespace TestProject.WebAPI.Handlers
                 return null;
             }
 
-            //return await Task.FromResult(
-            //    new GetUserResponse
-            //    {
-            //        Id = request.Id,
-            //        Name = "Tester",
-            //        Email = "email@email.com"
-            //    }
-            //);
         }
     }
 }

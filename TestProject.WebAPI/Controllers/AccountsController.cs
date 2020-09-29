@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TestProject.WebAPI.Commands.Accounts;
 using TestProject.WebAPI.Domain;
+using TestProject.WebAPI.Queries.Accounts;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -14,13 +15,18 @@ namespace TestProject.WebAPI.Controllers
     [ApiController]
     public class AccountsController : BaseController
     {
-        [HttpGet("/list/{id}")]
-        public ActionResult<IEnumerable<Account>> List()
+        [HttpGet("list")]
+        public async Task<IActionResult> List()
         {
-            return new List<Account> 
-            {   new Account { Id = Guid.NewGuid() },
-                new Account { Id = Guid.NewGuid() }
-            };
+            var query = new ListAccountsQuery();
+            var response = await Mediator.Send(query);
+
+            return Ok(response);
+
+            //return new List<Account> 
+            //{   new Account { Id = Guid.NewGuid() },
+            //    new Account { Id = Guid.NewGuid() }
+            //};
         }
 
         [HttpPost("create")]

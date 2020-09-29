@@ -33,16 +33,6 @@ namespace TestProject.WebAPI.Handlers
             {
                 return new List<ListUsersResponse>();
             }
-
-            //return await Task.FromResult(new List<ListUsersResponse>()
-            //{
-            //    new ListUsersResponse
-            //    {
-            //        Id = Guid.NewGuid(),
-            //        Name = "Tester",
-            //        Email = "email@email.com"
-            //    }
-            //});
         }
     }
 }
