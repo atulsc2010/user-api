@@ -1,8 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using TestProject.WebAPI.Models;
@@ -20,7 +17,7 @@ namespace TestProject.WebAPI.Handlers
         }
 
         public async Task<GetUserResponse> Handle(GetUserQuery request, CancellationToken cancellationToken)
-        {            
+        {
             var user = await _db.Users.Include(u => u.Accounts).FirstOrDefaultAsync(u => u.Id == request.Id);
 
             if (user != null)

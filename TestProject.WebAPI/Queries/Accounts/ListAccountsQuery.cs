@@ -5,6 +5,6 @@ namespace TestProject.WebAPI.Queries.Accounts
 {
     public class ListAccountsQuery : IRequest<IEnumerable<ListAccountsResponse>>
     {
- 
+
     }
 }

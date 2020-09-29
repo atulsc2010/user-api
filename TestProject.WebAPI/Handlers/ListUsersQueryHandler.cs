@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -23,7 +22,7 @@ namespace TestProject.WebAPI.Handlers
         {
             var users = await _db.Users
                                  .Select(u => new ListUsersResponse { Id = u.Id, Name = u.Name, Email = u.Email })
-                                 .ToListAsync() ;
+                                 .ToListAsync();
 
             if (users.Any())
             {

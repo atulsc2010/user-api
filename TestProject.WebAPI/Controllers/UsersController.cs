@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
 using TestProject.WebAPI.Commands.Users;
-using TestProject.WebAPI.Domain;
 using TestProject.WebAPI.Queries.Users;
 
 namespace TestProject.WebAPI.Controllers
@@ -28,7 +25,7 @@ namespace TestProject.WebAPI.Controllers
 
             return Ok(response);
         }
-        
+
         // GET api/<UsersController>/5
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUser([FromRoute] Guid id)
@@ -40,9 +37,9 @@ namespace TestProject.WebAPI.Controllers
             {
                 return Ok(response);
             }
-            else 
+            else
             {
-                return NotFound($"{{error : User {id} Not found }}");          
+                return NotFound($"{{error : User {id} Not found }}");
             }
         }
 
