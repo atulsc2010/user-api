@@ -24,8 +24,6 @@ services:
       - "db:database"
     ports: 
       - 8000:80
-    environment:
-      ASPNETCORE_ENVIRONMENT: "Development"
 
 volumes:
   db-volume:
