@@ -3,48 +3,238 @@ We have a fictitious scenario where we'd like to build an API to manage app user
 
 This should be implemented with an API and database.
 
-## Business Requirements
+Read the full scenario and technical requirements in [Requirements.md](Requirements.md)
 
-* Should not allow more than one user with the same email address
-* App allows credit for up to $1000, so if `monthly salary - monthly expenses` is less than $1000 we should not create an account for the user and return an error
+---
 
-## Tech Requirements
- 
-* API: Your choice!
-* Database: See *Supporting Services* below
-* Documentation: Update `DEVELOPERS.md` with information you'd give to other members of your team about how to work with the solution
+# User API Solution
 
-## Supporting Services
+### Overview
 
-To assist with your submission and to save you time in downloading and installing software, we've included a `docker-compose.yml` with boilerplate configuration for a few popular database options (MSSQL, PostgresQL, and MySQL). Choose one and remove the other two (or substitute) based on your preference. Note that you only need to have *one* database, you don't need to use all of them.
+This application follows standard ASP.Net WebAPI structure with CQRS design pattern.
 
-If your submission calls for other supporting services, feel free to add as necessary to your `docker-compose` config.
+Project uses MediatR package for separation of Domain and Application logic.   
+All the application logic and business rules are implemented in the respective Handlers.
+The Controllers are only responsible for accepting a request and delegating them to MediatR to route them to the correct handler.
+  
 
-## API Requirements
+Application Domain contains 2 main entities User and Account.
+This project uses PostgreSQL for data persistance.
 
-1. The following Endpoints are required:
-    * Create user
-      * Fields to be provided and persist
-        * Name
-        * Email Address (Must be unique)
-        * Monthly Salary (Must be a positive number - for simplicity, pretend there is no such thing as income tax)
-        * Monthly Expenses (Must be a positive number)
-    * List users
-    * Get user
-    * Create an account
-      * Given a user, create an account
-      * Should take into account the business requirements above
-      * Up to you to decide the appropriate fields to persist here
-    * List Accounts
-1. Should be robust and include relevant response codes for different scenarios
-1. No need to implement any kind of auth for this test
 
-## Database Requirements
+    Folder Structure
 
-Users and accounts should persist to a database of your choice
+    TestProject.WebAPI
+        /Domain -  Domain Entity classes
+        /Commands - Command/Request/Reponse type definitions per entity 
+        /Queries - Query/Request/Reponse type definitions per entity
+        /Handlers - This is the application layer which implement the required business logic and db operations  
+        /Controllers
+            /UsersController - Apis for Users 
+            /AcccountsController - Apis for Accounts
+        /Models - Contains Database context 
+    
 
-## Definition of Done
+## Building
 
-This solution should be what you consider to be production ready, so think carefully about what you want to include. Please submit as a git repo and send us a link when done.
+Build using IDE or CLI
 
-We value your time, so we don't want you to spend a massive amount of time on this so we'd recommend spending around 3-4 hours on this.
+    Only application build then use
+        dotnet build
+    
+    Docker Build as below 
+        cd /source/repos/users-api/TestProject.WebAPI
+        docker-compose up --build 
+
+    DB Migrations are added into Application startup
+
+
+## Testing
+
+This api can be tested in following ways 
+    
+1. By Running Unit Tests
+    ```
+        Via CLI 
+
+            cd /source/repos/users-api/TestProject.Tests
+            dotnet test
+
+        Or Use a test runner in the IDE 
+    ```
+2. By Running Api as Docker container and use PostMan or Curl for sending requests 
+    ```
+        In CLI , which will build and run the application and db containers
+
+        cd /source/repos/users-api/TestProject.WebAPI
+        docker-compose up --build 
+
+    ```  
+
+ Once the app and db containers are running we can make following API requests 
+
+##### Health check 
+    
+Request
+```
+    GET http://localhost:8000/api/users
+```
+    
+Response
+```
+        200 OK
+        Api is running.
+```       
+
+##### Create User 
+    
+Request
+```
+    curl --location --request POST 'http://localhost:8000/api/users/create' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{"name": "test" , "email": "test@email.com", "salary": 10000 , "expenses": 1500}'
+```
+    
+Response
+```
+    201 Created
+
+    {
+        "type": "CreateUserResponse",
+        "id": "48d9159d-2b2d-4531-b99b-670afc1971c7",
+        "status": "Success"
+    }
+```       
+
+##### Create Account 
+    
+Request
+```
+    curl --location --request POST 'http://localhost:8000/api/accounts/create' \
+    --header 'Content-Type: application/json' \
+    --data-raw '{
+        "userid": "48d9159d-2b2d-4531-b99b-670afc1971c7"
+    }'
+```
+    
+Response
+```
+    201 Created
+
+    {
+        "type": "CreateAccountResponse",
+        "id": "ec899376-3718-4b3b-aa75-8012b9fdcb5d",
+        "status": "Success"
+    }
+```    
+
+##### List Users 
+    
+Request
+```
+    curl --location --request GET 'http://localhost:8000/api/users/list'
+```
+    
+Response
+```
+    200 Ok
+
+    [
+        {
+            "type": "ListUsersResponse",
+            "id": "47f144d4-1c89-4e42-95a7-9014b82f2570",
+            "name": "test",
+            "email": "test1@email.com"
+        },
+        {
+            "type": "ListUsersResponse",
+            "id": "7eebd0f6-a2af-4a82-958b-a28bd52b05c8",
+            "name": "test",
+            "email": "test10@email.com"
+        }
+    ]
+
+
+``` 
+
+##### Get User 
+    
+Request
+```
+    curl --location --request GET 'http://localhost:8000/api/users/7eebd0f6-a2af-4a82-958b-a28bd52b05c8'
+```
+    
+Response
+```
+    200 Ok
+
+    {
+        "type": "GetUserResponse",
+        "id": "7eebd0f6-a2af-4a82-958b-a28bd52b05c8",
+        "name": "test",
+        "email": "test10@email.com",
+        "salary": 10000,
+        "expenses": 1500,
+        "accounts": [
+            {
+                "id": "1a2b9b1d-b5b5-4753-a1d6-6f7c8c0609c5",
+                "name": "Wallet 9981509",
+                "status": 0,
+                "balance": 0,
+                "userId": "7eebd0f6-a2af-4a82-958b-a28bd52b05c8"
+            },
+            {
+                "id": "ec899376-3718-4b3b-aa75-8012b9fdcb5d",
+                "name": "Wallet 0035283",
+                "status": 0,
+                "balance": 0,
+                "userId": "7eebd0f6-a2af-4a82-958b-a28bd52b05c8"
+            }
+        ]
+    }
+
+```    
+
+##### List Accounts 
+    
+Request
+```
+    curl --location --request GET 'http://localhost:8000/api/accounts/list'
+```
+
+```
+    200 OK
+
+    [
+        {
+            "type": "ListAccountsResponse",
+            "id": "9b4f9d12-731e-4361-a5aa-b976e4c7ac8e",
+            "userId": "7a8419ba-ab3c-4a3c-8241-84acafecb667",
+            "name": "Wallet 2808765",
+            "status": 0,
+            "balance": 0
+        },
+        {
+            "type": "ListAccountsResponse",
+            "id": "32739e8e-6f1f-4eec-8460-37db99df810a",
+            "userId": "7a8419ba-ab3c-4a3c-8241-84acafecb667",
+            "name": "Wallet 9563500",
+            "status": 0,
+            "balance": 0
+        },
+    ]
+```
+
+
+## Deploying
+
+This project has Docker support, containers can be deployed using `docker-compose` shown in above sections.
+
+## Additional Information
+### Further Improvements 
+- Use a standard API media type such as JsonApi for standardised serialization instead of custom JSON for every API
+- Application Logging for better diagnosis
+- Use AutoMapper for concise code for mapping between domain and request/response objects
+- Create a repository for handling DB oprations so that it can be separted from handlers.
+- Add Swagger support for better API documnetation
+- Move DB Migrations out of application start up for better performance
